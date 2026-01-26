@@ -22,7 +22,7 @@ public class LoginAPITest {
 		//Rest Assured Code
 		
 		//Read the property value that is going to be passed from terminal!!
-		System.err.println(System.getProperty("propertyName"));
+		System.out.println(System.getProperty("propertyName"));
 		UserCredentials userCredentials = new UserCredentials("iamfd", "password");
 
 		given()

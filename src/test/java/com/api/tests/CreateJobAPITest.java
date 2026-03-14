@@ -2,6 +2,8 @@ package com.api.tests;
 
 import static org.hamcrest.Matchers.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
 import com.api.utils.AuthTokenProvider;
 import com.api.utils.ConfigManager;
+import com.api.utils.DateTimeUtil;
 import com.api.utils.SpecUtil;
 
 import io.restassured.http.ContentType;
@@ -30,12 +33,13 @@ public class CreateJobAPITest {
 	@Test
 	public void createJobAPITest() {
 		//Creating CreateJobPayloadObject
-		
+	     System.out.println(Instant.now().minus(10, ChronoUnit.DAYS));
+	     System.out.println("########################################################");
 		Customer customer=new Customer("Jatin", "Shharma", "7045663552", "", "jatinvsharma@gmail.com", "");
 		System.out.println(customer.first_name());
 		CustomerAddress customerAddress=new CustomerAddress("D 404", "Vasant Galaxy", "Bangur Nagar", "Inorbit", "Mumbai", "411039", "India", "Maharashtra");
 		System.out.println(customerAddress.apartment_name());
-		CustomerProduct customerProduct=new CustomerProduct("2025-04-06T18:30:00.000Z", "61332187442753", "61332187442753", "61332187442753","2025-04-06T18:30:00.000Z", 1, 1);
+		CustomerProduct customerProduct=new CustomerProduct(DateTimeUtil.getTimeWithDaysAgo(10), "61339090442753", "61339090442753", "61339090442753",DateTimeUtil.getTimeWithDaysAgo(10), 1, 1);
 		Problems problems=new Problems(1, "Battery Issue");
 		List<Problems> problemList=new ArrayList<Problems>();
 		problemList.add(problems);

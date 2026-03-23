@@ -20,10 +20,15 @@ public class SpecUtil {
 	public static RequestSpecification requestSpec() {
 		// To take care of common request sections(Methods)
 
-		RequestSpecification requestSpecification = new RequestSpecBuilder()
-				.setBaseUri(ConfigManager.getProperty("BASE_URI")).setContentType(ContentType.JSON)
-				.setAccept(ContentType.JSON).log(LogDetail.URI).log(LogDetail.METHOD)
-				.log(LogDetail.HEADERS).log(LogDetail.BODY).build();
+		RequestSpecification requestSpecification = 
+				new RequestSpecBuilder()
+				.setBaseUri(ConfigManager.getProperty("BASE_URI"))
+				.setContentType(ContentType.JSON)
+				.setAccept(ContentType.JSON)
+				.log(LogDetail.URI)
+				.log(LogDetail.METHOD)
+				.log(LogDetail.HEADERS)
+				.log(LogDetail.BODY).build();
 
 		return requestSpecification;
 	}

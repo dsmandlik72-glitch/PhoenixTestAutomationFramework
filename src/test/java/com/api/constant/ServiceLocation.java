@@ -1,4 +1,5 @@
-package com.api.request.model;
+package com.api.constant;
+
 
 public enum ServiceLocation {
 	SERVICE_LOCATION_A(1),

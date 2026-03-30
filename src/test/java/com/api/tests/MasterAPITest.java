@@ -1,31 +1,29 @@
 package com.api.tests;
 
 import static com.api.constant.Role.FD;
-import static com.api.utils.AuthTokenProvider.getToken;
-import static com.api.utils.ConfigManager.getProperty;
+import static com.api.utils.SpecUtil.responseSpec_OK;
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.notNullValue;
 
-import static org.hamcrest.Matchers.*;
 import org.testng.annotations.Test;
 
-import com.api.utils.SpecUtil;
-
-import io.restassured.module.jsv.JsonSchemaValidator;
-
-import static io.restassured.module.jsv.JsonSchemaValidator.*;
+import static com.api.utils.SpecUtil.*;
 
 public class MasterAPITest {
-	@Test
+	@Test(description = "Verify if the Master API  is giving correct response", groups= {"api", "smoke", "regression"})
+
 	public void masterAPITest() {
 given()
-.spec(SpecUtil.requestSpecWithAuth(FD))
+.spec(requestSpecWithAuth(FD))
 .when()
 .post("master")//Default content-type application/url-formencoded
 .then()
-.spec(SpecUtil.responseSpec_OK())
+.spec(responseSpec_OK())
 .body("message", equalTo("Success"))
 .body("data", notNullValue())
 .body("data", hasKey("mst_oem"))
@@ -42,13 +40,13 @@ given()
 
 	
 }
-@Test
+@Test(description = "Verify if the Master API  is giving correct status code for Invalid Token", groups= {"api","negative", "smoke", "regression"})
 public void invalidTokenMasterAPITest() {
 	given()
-	.spec(SpecUtil.requestSpec())
+	.spec(requestSpec())
 	.log().all()
 	.when()
 	.post("master")//Default content-type application/url-formencoded
 	.then()
-	.spec(SpecUtil.responseSpec_TEXT(401));
+	.spec(responseSpec_TEXT(401));
 }}

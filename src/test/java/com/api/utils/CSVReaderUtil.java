@@ -18,7 +18,7 @@ public class CSVReaderUtil {
  */
 private CSVReaderUtil() {
 	//Due to Private Constructor No one can create Object of CSVReaderUtil class outside the Class.
-	//Singleton class alos has Private Constructors.
+	//Singleton class alos has Private Constructors
 }
 	
 public static void loadCSV(String pathOfCSVFile)  {

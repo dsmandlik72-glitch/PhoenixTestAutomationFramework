@@ -9,7 +9,7 @@ public class UserBean {
     private String password;
 	
 	public UserBean() {
-		
+		//Constructor
 	}
 
 

@@ -18,5 +18,4 @@ public enum Problem {
 		return code;
 	}
 	
-	
 }

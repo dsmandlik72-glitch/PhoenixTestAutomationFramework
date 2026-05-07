@@ -30,9 +30,12 @@ public class UserBean {
 		this.password = password;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "UserPOJO [username=" + username + ", password=" + password + "]";
+		return "UserBean [username=" + username + ", password=" + password + "]";
 	}
 
+	
 }

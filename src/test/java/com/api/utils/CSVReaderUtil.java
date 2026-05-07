@@ -19,19 +19,21 @@ public class CSVReaderUtil {
 	private CSVReaderUtil() {
 		// Due to Private Constructor No one can create Object of CSVReaderUtil class
 		// outside the Class.
-		// Singleton class alos has Private Constructors
+		// Singleton class also has Private Constructors
 	}
 
-	public static Iterator<UserBean> loadCSV(String pathOfCSVFile) {
+	public static <T> Iterator<T> loadCSV(String pathOfCSVFile, Class<T> bean) {
 
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathOfCSVFile);
 		InputStreamReader isr = new InputStreamReader(is);
 		CSVReader csvReader = new CSVReader(isr);// CSVReader Constructor
 
-		CsvToBean<UserBean> csvToBean = new CsvToBeanBuilder(csvReader).withType(UserBean.class)
-				.withIgnoreEmptyLine(true).build();
+		CsvToBean<T> csvToBean = new CsvToBeanBuilder(csvReader)
+				.withType(bean)
+				.withIgnoreEmptyLine(true)
+				.build();
 
-		List<UserBean> userList = csvToBean.parse();
-		return userList.iterator();
+		List<T> list = csvToBean.parse();
+		return list.iterator();
 	}
 }

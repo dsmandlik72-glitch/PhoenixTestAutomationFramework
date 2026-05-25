@@ -24,6 +24,7 @@ public class FakerDataGenerator {
 	private final static int MST_OEM_ID = 1;
 	private final static int PRODUCT_ID = 1;
 	private final static int MST_MODEL_ID = 1;
+	private final static int validProblemsId[]= {1,2,3,4,5,6,7,8,9,10,11,12,15,16,17,19,20,22,24,26,27,28,29};
 
 	private FakerDataGenerator() {
 
@@ -57,10 +58,9 @@ public class FakerDataGenerator {
 	}
 
 	private static List<Problems> generateFakeProblemsList() {
+		int randomIndex=RANDOM.nextInt(validProblemsId.length);//It generates the values from 0 to 22
 		String fakeRemark = faker.lorem().sentence(5);
-		// I want to generate a random number between 1 to 27
-		int problemId = RANDOM.nextInt(26) + 1;
-		Problems problems = new Problems(problemId, fakeRemark);
+		Problems problems = new Problems(validProblemsId[randomIndex], fakeRemark);
 		System.out.println(problems);
 
 		List<Problems> problemList = new ArrayList<Problems>();

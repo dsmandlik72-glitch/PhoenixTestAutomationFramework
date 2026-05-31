@@ -6,8 +6,12 @@
 			<class name="com.api.tests.datadriven.LoginAPIDataDrivenTest" />
 			<class name="com.api.tests.datadriven.CreateJobAPIDataDrivenTest" />
 			<class name="com.api.tests.datadriven.CreateJobAPIFakeDataDrivenTest" />
-			<class name="com.api.tests.datadriven.LoginAPIJSONDataDrivenTest.java" />
-			<class name="com.api.tests.datadriven.CreateJobAPIJSONDataDrivenTest.java" />
+			<class name="com.api.tests.datadriven.LoginAPIJSONDataDrivenTest" />
+            <class name="com.api.tests.datadriven.CreateJobAPIJSONDataDrivenTest" />
+            <class name="com.api.tests.datadriven.LoginAPIExcelDataDrivenTest" />
+            <class name="com.api.tests.datadriven.CreateJobAPIExcelDataDrivenTest" />
+
+
 
 
 		</classes>

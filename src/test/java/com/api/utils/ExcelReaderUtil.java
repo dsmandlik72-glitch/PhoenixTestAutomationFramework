@@ -1,44 +1,43 @@
 package com.api.utils;
 
 import java.io.IOException;
+import org.apache.poi.ss.usermodel.Cell;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.api.request.model.UserCredentials;
+import com.dataproviders.api.bean.UserBean;
+import com.poiji.bind.Poiji;
+
 public class ExcelReaderUtil {
-	public static void main(String[] args) throws IOException {
+
+	private ExcelReaderUtil() {
+
+	}
+
+	public static <T> Iterator<T> loadTestData(String xlsxFile,String sheetName, Class<T> clazz)  {
 //APACHE POI OOXML LIB
-		InputStream is = Thread.currentThread()
-				.getContextClassLoader()
-				.getResourceAsStream("testData/PhoenixTestData.xlsx");
-		XSSFWorkbook myWorkBook = new XSSFWorkbook(is);
+		InputStream is = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(xlsxFile);
+		XSSFWorkbook myWorkBook=null;
+		try {
+			myWorkBook = new XSSFWorkbook(is);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Focus on the Sheet
 
-		XSSFSheet mySheet = myWorkBook.getSheet("LoginTestData");
-		XSSFRow myRow;
-		XSSFCell myCell;
-//		XSSFRow myRow = mySheet.getRow(1);
-//		XSSFCell myCell = myRow.getCell(0);
-//		System.out.println(myCell);
+		XSSFSheet mySheet = myWorkBook.getSheet(sheetName);//"LoginTestData"
+	List<T> dataList	=Poiji.fromExcel(mySheet, clazz);
+	return dataList.iterator();
 		
-		int lastRowIndex=mySheet.getLastRowNum();
-		System.out.println(lastRowIndex);
-		
-		XSSFRow rowHeader=mySheet.getRow(0);
-		int lastIndexOfCol=rowHeader.getLastCellNum()-1;//Return the total number of cols
-		System.out.println(lastIndexOfCol);
-		
-		for(int rowIndex=0;rowIndex<=lastRowIndex;rowIndex++) {
-			for(int colIndex=0;colIndex<=lastIndexOfCol;colIndex++) {
-				myRow=mySheet.getRow(rowIndex);
-				myCell=myRow.getCell(colIndex);
-				System.out.print(myCell+"  ");
-				
-			}
-			System.out.println(" ");
-		}
 	}
 }

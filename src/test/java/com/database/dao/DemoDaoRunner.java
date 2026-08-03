@@ -5,21 +5,16 @@ import java.sql.SQLException;
 import org.testng.Assert;
 
 import com.api.request.model.Customer;
+import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 
 public class DemoDaoRunner {
 
 	public static void main(String[] args) throws SQLException {
 
-		CustomerDBModel customerDBData = CustomerDao.getCustomerInfo();
-		System.out.println(customerDBData);
-		System.out.println(customerDBData.getFirst_name());
-		System.out.println(customerDBData.getEmail_id());
-		System.out.println(customerDBData.getMobile_number());
-		Customer customer = new Customer("Vijay", "Chavan", "9405167371", "9096123433", "dsmandlik72@gmail.com",
-				"dmandlik92@gmail.com");
-		System.out.println(customer.first_name());
-		Assert.assertEquals(customerDBData.getFirst_name(), customer.first_name());
+		CustomerAddressDBModel customerAddressDBModel=CustomerAddressDao.getCustomerAddressData(375070);
+		System.out.println(customerAddressDBModel);
+		//Assert.assertEquals(customerDBData.getFirst_name(), customer.first_name());
 	}
 
 }

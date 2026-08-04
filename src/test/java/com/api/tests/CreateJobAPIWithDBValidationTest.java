@@ -31,9 +31,11 @@ import com.api.request.model.Problems;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
+import com.database.dao.MapJobProblemDao;
 import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 import com.database.model.CustomerProductDBModel;
+import com.database.model.MapJobProblemModel;
 
 import io.restassured.response.Response;
 
@@ -54,8 +56,8 @@ public class CreateJobAPIWithDBValidationTest {
 				"India", "Maharashtra");
 		System.out.println(customerAddress.apartment_name());
 
-		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "87197090442606", "87197090442606",
-				"87197090442606", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
+		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "56897090442606", "56897090442606",
+				"56897090442606", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
 
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
 
@@ -115,6 +117,13 @@ public class CreateJobAPIWithDBValidationTest {
 
 		int productID = response.then().extract().body().jsonPath().getInt("data.tr_customer_product_id");
 
+		
+
+		int tr_job_head_id = response.then().extract().body().jsonPath().getInt("data.id");
+		MapJobProblemModel jobDataFromDB=MapJobProblemDao.getProblemDetails(tr_job_head_id);
+		Assert.assertEquals(jobDataFromDB.getMst_problem_id(), createJobPayload.problems().get(0).id());
+		Assert.assertEquals(jobDataFromDB.getRemark(), createJobPayload.problems().get(0).remark());
+		
 		CustomerProductDBModel customerProductDBData = CustomerProductDao.getProductInfoFromDB(productID);
 		Assert.assertEquals(customerProductDBData.getImei1(), customerProduct.imei1());
 		Assert.assertEquals(customerProductDBData.getImei2(), customerProduct.imei2());

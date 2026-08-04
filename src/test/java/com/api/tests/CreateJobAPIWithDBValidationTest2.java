@@ -32,9 +32,11 @@ import com.api.response.model.CreateJobResponseModel;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
+import com.database.dao.MapJobProblemDao;
 import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 import com.database.model.CustomerProductDBModel;
+import com.database.model.MapJobProblemModel;
 
 import io.restassured.response.Response;
 
@@ -114,10 +116,14 @@ public class CreateJobAPIWithDBValidationTest2 {
 		Assert.assertEquals(customerAddressFromDB.getStreet_name(), customerAddress.street_name());
 		Assert.assertEquals(customerAddressFromDB.getCountry(), customerAddress.country());
 		Assert.assertEquals(customerAddressFromDB.getPincode(), customerAddress.pincode());
+		
+		int tr_job_head_id = createJobResponseModel.getData().getId();
+		MapJobProblemModel jobDataFromDB=MapJobProblemDao.getProblemDetails(tr_job_head_id);
+		Assert.assertEquals(jobDataFromDB.getMst_problem_id(), createJobPayload.problems().get(0).id());
+		Assert.assertEquals(jobDataFromDB.getRemark(), createJobPayload.problems().get(0).remark());
 
 		int productID = createJobResponseModel.getData().getTr_customer_product_id();
-
-		CustomerProductDBModel customerProductDBData = CustomerProductDao.getProductInfoFromDB(productID);
+        CustomerProductDBModel customerProductDBData = CustomerProductDao.getProductInfoFromDB(productID);
 		Assert.assertEquals(customerProductDBData.getImei1(), customerProduct.imei1());
 		Assert.assertEquals(customerProductDBData.getImei2(), customerProduct.imei2());
 		Assert.assertEquals(customerProductDBData.getSerial_number(), customerProduct.serial_number());

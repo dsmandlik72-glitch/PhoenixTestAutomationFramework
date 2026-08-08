@@ -65,6 +65,10 @@ public class CreateJobPayloadDataDao {
 
 					""";
 
+	private CreateJobPayloadDataDao() {
+
+	}
+
 	public static List<CreateJobBean> getCreateJobPayLoadData() {
 
 		/*
@@ -77,7 +81,7 @@ public class CreateJobPayloadDataDao {
 		Connection conn = null;
 		Statement statement;
 		ResultSet resultSet = null;
-		//CreateJobBean bean = new CreateJobBean();
+		// CreateJobBean bean = new CreateJobBean();
 
 		List<CreateJobBean> beanList = new ArrayList<CreateJobBean>();
 

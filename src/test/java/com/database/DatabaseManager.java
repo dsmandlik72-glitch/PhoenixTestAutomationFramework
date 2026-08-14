@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.api.utils.ConfigManager;
 import com.api.utils.EnvUtil;
+import com.api.utils.VaultDBConfig;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -14,10 +15,15 @@ public class DatabaseManager {
 //	private static final String DB_URL = ConfigManager.getProperty("DB_URL");
 //	private static final String DB_USERNAME = ConfigManager.getProperty("DB_USERNAME");
 //	private static final String DB_PASSWORD = ConfigManager.getProperty("DB_PASSWORD");
-	
-	private static final String DB_URL = EnvUtil.getValue("DB_URL");
-	private static final String DB_USERNAME = EnvUtil.getValue("DB_USERNAME");
-	private static final String DB_PASSWORD = EnvUtil.getValue("DB_PASSWORD");
+
+//	private static final String DB_URL = EnvUtil.getValue("DB_URL");
+//	private static final String DB_USERNAME = EnvUtil.getValue("DB_USERNAME");
+//	private static final String DB_PASSWORD = EnvUtil.getValue("DB_PASSWORD");
+
+//	private static final String DB_URL = VaultDBConfig.getSecret("DB_URL");
+//	private static final String DB_USERNAME = VaultDBConfig.getSecret("DB_USERNAME");
+//	private static final String DB_PASSWORD = VaultDBConfig.getSecret("DB_PASSWORD");
+
 	private static final int MAX_POOL_SIZE = Integer.parseInt(ConfigManager.getProperty("MAXIMUM_POOL_SIZE"));
 	private static final int MINIUM_IDLE_COUNT = Integer.parseInt(ConfigManager.getProperty("MINIUM_IDLE_COUNT"));
 	private static final int CONNECTION_TIMEOUT_IN_SECS = Integer
@@ -35,6 +41,33 @@ public class DatabaseManager {
 																		// any update happens in hikariDataSource
 	// private static Connection connection;
 
+	private static boolean isVaultUp = true;
+	private static final String DB_URL = loadSecret("DB_URL");
+	private static final String DB_USERNAME = loadSecret("DB_USERNAME");
+	private static final String DB_PASSWORD = loadSecret("DB_PASSWORD");
+
+	public static String loadSecret(String key) {
+		String value = null;
+		// Value will get its value from either Vault or Env
+
+		if (isVaultUp) {
+			value = VaultDBConfig.getSecret(key);
+
+			if (value == null) {// When something is wrong with Vault!
+				System.err.println("Vault is Down!! or some issue with Vault");
+				isVaultUp = false;
+
+			} else {
+				System.out.println("READING VALUE FROM VAULT......");
+				return value;// Coming from Vault!!
+			}
+		}
+		// We need to pick up data from Env!!
+		System.out.println("READING VALUE FROM ENV.....");
+		value = EnvUtil.getValue(key);
+		return value;
+	}
+
 	private DatabaseManager() {
 
 	}
@@ -46,7 +79,7 @@ public class DatabaseManager {
 					HikariConfig hikariConfig = new HikariConfig();
 					hikariConfig.setJdbcUrl(DB_URL);
 					hikariConfig.setUsername(DB_USERNAME);
-					hikariConfig.setPassword(DB_PASSWORD );
+					hikariConfig.setPassword(DB_PASSWORD);
 
 					hikariConfig.setMaximumPoolSize(MAX_POOL_SIZE);// "10" String is converted to Int
 					hikariConfig.setMinimumIdle(MINIUM_IDLE_COUNT);

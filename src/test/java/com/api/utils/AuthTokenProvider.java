@@ -4,6 +4,9 @@ import static io.restassured.RestAssured.*;
 
 import static org.hamcrest.Matchers.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.api.constant.Role.*;
 
 import com.api.constant.Role;
@@ -12,12 +15,21 @@ import com.api.request.model.UserCredentials;
 import io.restassured.http.ContentType;
 
 public class AuthTokenProvider {
+	
+	private static Map<Role, String> tokenCache=new HashMap<Role, String>();
+	private AuthTokenProvider() {
+		
+	}
 
 	public static String getToken(Role role) {
 		/*
 		 * We want to make an API Request for the Login API and we want to extract the
 		 * Token and Print It on Console
 		 */
+		
+		if(tokenCache.containsKey(role)) {
+			return tokenCache.get(role);
+		}
 		UserCredentials userCredentials = null;
 
 		if (role==FD) {
@@ -39,6 +51,7 @@ public class AuthTokenProvider {
 				.log().ifValidationFails().statusCode(200).body("message", equalTo("Success")).extract().body()
 				.jsonPath().getString("data.token");
 
+		tokenCache.put(role, token);
 		return token;
 
 	}

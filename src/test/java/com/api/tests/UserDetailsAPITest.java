@@ -8,16 +8,25 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 import java.io.IOException;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.api.services.UserService;
+
 public class UserDetailsAPITest {
-	@Test(description = "Verify if the UserDetails API Response is shown correctly", groups= {"api", "smoke", "regression"})
+	private UserService userService;
+
+	@BeforeMethod(description = "Setting up the UserService instance")
+	public void setup() {
+		userService = new UserService();
+
+	}
+
+	@Test(description = "Verify if the UserDetails API Response is shown correctly", groups = { "api", "smoke",
+			"regression" })
 	public void userDetailsAPITest() throws IOException {
-		given()
-		.spec(requestSpecWithAuth(FD))
-		.when().get("userdetails")
-		.then().spec(responseSpec_OK())
-		.and()
-		.body(matchesJsonSchemaInClasspath("response-schema/UserDetailsResponseSchema.json"));
+
+		userService.userDetails(FD).then().spec(responseSpec_OK()).and()
+				.body(matchesJsonSchemaInClasspath("response-schema/UserDetailsResponseSchema.json"));
 	}
 }

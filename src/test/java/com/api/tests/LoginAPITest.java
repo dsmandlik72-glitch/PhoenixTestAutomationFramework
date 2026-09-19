@@ -12,6 +12,8 @@ import org.testng.annotations.Test;
 import com.api.request.model.UserCredentials;
 import com.api.services.AuthService;
 
+import io.restassured.response.Response;
+
 import static com.api.utils.SpecUtil.*;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.*;
@@ -33,6 +35,8 @@ public class LoginAPITest {
 
 	{
 		// Rest Assured Code
+//		Response response=authService.login(userCredentials);
+//		response
 		authService.login(userCredentials)
 		.then()
 		.spec(responseSpec_OK())

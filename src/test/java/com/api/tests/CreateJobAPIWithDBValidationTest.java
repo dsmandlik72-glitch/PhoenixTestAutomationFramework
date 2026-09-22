@@ -28,6 +28,7 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.services.JobService;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
@@ -46,9 +47,10 @@ public class CreateJobAPIWithDBValidationTest {
 	private CreateJobPayload createJobPayload;
 	private Customer customer;
 	private CustomerAddress customerAddress;
-	CustomerProduct customerProduct;
+	private CustomerProduct customerProduct;
+	private JobService jobService;
 
-	@BeforeMethod(description = "Creating createjob api request payload")
+	@BeforeMethod(description = "Creating createjob api request payload and instanttiating the JobService")
 	public void setup() {
 
 		customer = new Customer("Jatin", "Shharma", "7045663552", "", "jatinvsharma@gmail.com", "");
@@ -58,8 +60,8 @@ public class CreateJobAPIWithDBValidationTest {
 				"India", "Maharashtra");
 		System.out.println(customerAddress.apartment_name());
 
-		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "56347090442606", "56347090442606",
-				"56347090442606", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
+		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "65227090442606", "65227090442606",
+				"65227090442606", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
 
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
 
@@ -69,7 +71,7 @@ public class CreateJobAPIWithDBValidationTest {
 		createJobPayload = new CreateJobPayload(ServiceLocation.SERVICE_LOCATION_A.getCode(),
 				Platform.FRONT_DESK.getCode(), Warranty_Status.IN_WARRENTY.getCode(), OEM.GOOGLE.getCode(), customer,
 				customerAddress, customerProduct, problemList);
-
+		jobService=new JobService();
 	}
 
 	@Test(description = "Verify if the Create Job API  is able to create Inwarranty Job", groups = { "api", "smoke",
@@ -77,10 +79,7 @@ public class CreateJobAPIWithDBValidationTest {
 	public void createJobAPITest() {
 		// Creating CreateJobPayloadObject
 
-		Response response = given()
-				.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-				.when()
-				.post("/job/create")
+		Response response = jobService.createJob(Role.FD, createJobPayload)
 				.then()
 				.spec(responseSpec_OK())
 				.body(matchesJsonSchemaInClasspath("response-schema/CreateJobAPIResponseSchema.json"))

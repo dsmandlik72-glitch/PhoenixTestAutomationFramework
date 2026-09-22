@@ -28,16 +28,17 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.services.JobService;
 import com.database.dao.CustomerDao;
 import com.database.model.CustomerDBModel;
 
 import static com.api.utils.SpecUtil.*;
 
 public class CreateJobAPITest {
+	private JobService jobService;
+	private CreateJobPayload createJobPayload;
 
-	CreateJobPayload createJobPayload;
-
-	@BeforeMethod(description = "Creating createjob api request payload")
+	@BeforeMethod(description = "Creating createjob api request payload and instanttiating the Job Service")
 	public void setup() {
 
 		Customer customer = new Customer("Jatin", "Shharma", "7045663552", "", "jatinvsharma@gmail.com", "");
@@ -47,8 +48,8 @@ public class CreateJobAPITest {
 				"Mumbai", "411039", "India", "Maharashtra");
 		System.out.println(customerAddress.apartment_name());
 
-		CustomerProduct customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "34497090444499",
-				"34497090444499", "34497090444499", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(),
+		CustomerProduct customerProduct = new CustomerProduct(getTimeWithDaysAgo(10), "46337090444499",
+				"46337090444499", "46337090444499", getTimeWithDaysAgo(10), Product.NEXUS_2.getCode(),
 				Model.NEXUS_2_BLUE.getCode());
 
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
@@ -60,6 +61,7 @@ public class CreateJobAPITest {
 				Platform.FRONT_DESK.getCode(), Warranty_Status.IN_WARRENTY.getCode(), OEM.GOOGLE.getCode(), customer,
 				customerAddress, customerProduct, problemList);
 
+		jobService=new JobService();
 	}
 
 	@Test(description = "Verify if the Create Job API  is able to create Inwarranty Job", groups = { "api", "smoke",
@@ -67,7 +69,8 @@ public class CreateJobAPITest {
 	public void createJobAPITest() {
 		// Creating CreateJobPayloadObject
 
-		given().spec(requestSpecWithAuth(Role.FD, createJobPayload)).when().post("/job/create").then()
+		jobService.createJob(Role.FD, createJobPayload)
+		.then()
 				.spec(responseSpec_OK())
 				.body(matchesJsonSchemaInClasspath("response-schema/CreateJobAPIResponseSchema.json"))
 				.body("message", equalTo("Job created successfully. ")).body("data.mst_service_location_id", equalTo(1))

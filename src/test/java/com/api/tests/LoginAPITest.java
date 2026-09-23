@@ -10,6 +10,10 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.api.request.model.UserCredentials;
+import com.api.services.AuthService;
+
+import io.restassured.response.Response;
+
 import static com.api.utils.SpecUtil.*;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.*;
@@ -17,10 +21,12 @@ import static io.restassured.module.jsv.JsonSchemaValidator.*;
 public class LoginAPITest {
 
 	UserCredentials userCredentials;
+	private AuthService authService;
 
-	@BeforeMethod(description="Create the payload for login api")
+	@BeforeMethod(description = "Create the payload for login api")
 	public void setUp() {
 		userCredentials = new UserCredentials("iamfd", "password");
+		authService = new AuthService();
 
 	}
 
@@ -29,15 +35,13 @@ public class LoginAPITest {
 
 	{
 		// Rest Assured Code
-
-		given()
-		.spec(requestSpec(userCredentials))
-		.when()
-		.post("login")
+//		Response response=authService.login(userCredentials);
+//		response
+		authService.login(userCredentials)
 		.then()
 		.spec(responseSpec_OK())
-				.and()
-				.body("message", equalTo("Success"))
+		.and()
+		.body("message", equalTo("Success"))
 				.and()
 				.body(matchesJsonSchemaInClasspath("response-schema/LoginResponseSchema.json"));
 

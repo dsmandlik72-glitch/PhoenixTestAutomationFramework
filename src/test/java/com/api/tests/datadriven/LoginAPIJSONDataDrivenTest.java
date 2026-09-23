@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.api.request.model.UserCredentials;
+import com.api.services.AuthService;
 import com.dataproviders.api.bean.UserBean;
 
 import static com.api.utils.SpecUtil.*;
@@ -18,7 +19,12 @@ import static io.restassured.module.jsv.JsonSchemaValidator.*;
 
 public class LoginAPIJSONDataDrivenTest {
 
-	
+	private AuthService authService;
+
+	@BeforeMethod(description = "Setting up the Auth Service reference")
+	public void setup() {
+		authService = new AuthService();
+	}
 
 	@Test(description = "Verify if login api is working for FD user", 
 			groups = { "api", "regression", "datadriven"},
@@ -30,10 +36,7 @@ public class LoginAPIJSONDataDrivenTest {
 	{
 		// Rest Assured Code
 
-		given()
-		.spec(requestSpec(userCredentials))
-		.when()
-		.post("login")
+	authService.login(userCredentials)
 		.then()
 		.spec(responseSpec_OK())
 				.and()

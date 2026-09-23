@@ -29,6 +29,7 @@ import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
 import com.api.response.model.CreateJobResponseModel;
+import com.api.services.JobService;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
@@ -47,9 +48,9 @@ public class CreateJobAPIWithDBValidationWithResponseModelTest {
 	private CreateJobPayload createJobPayload;
 	private Customer customer;
 	private CustomerAddress customerAddress;
-	CustomerProduct customerProduct;
-
-	@BeforeMethod(description = "Creating createjob api request payload")
+	private CustomerProduct customerProduct;
+    private JobService jobService;
+	@BeforeMethod(description = "Creating createjob api request payload and instanttiating the JobService")
 	public void setup() {
 
 		customer = new Customer("Dhananjay", "Shharma", "7045663552", "", "jatinvsharma@gmail.com", "");
@@ -70,7 +71,7 @@ public class CreateJobAPIWithDBValidationWithResponseModelTest {
 		createJobPayload = new CreateJobPayload(ServiceLocation.SERVICE_LOCATION_A.getCode(),
 				Platform.FRONT_DESK.getCode(), Warranty_Status.IN_WARRENTY.getCode(), OEM.GOOGLE.getCode(), customer,
 				customerAddress, customerProduct, problemList);
-
+		jobService=new JobService();
 	}
 
 	@Test(description = "Verify if the Create Job API  is able to create Inwarranty Job", groups = { "api", "smoke",
@@ -78,10 +79,7 @@ public class CreateJobAPIWithDBValidationWithResponseModelTest {
 	public void createJobAPITest() {
 		// Creating CreateJobPayloadObject
 
-		CreateJobResponseModel createJobResponseModel = given()
-				.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-				.when()
-				.post("/job/create")
+		CreateJobResponseModel createJobResponseModel = jobService.createJob(Role.FD, createJobPayload)
 				.then()
 				.spec(responseSpec_OK())
 				.body(matchesJsonSchemaInClasspath("response-schema/CreateJobAPIResponseSchema.json"))
